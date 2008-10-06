@@ -1,0 +1,10 @@
+
+one:
+  name: Bob
+  email: Bob@gmail.com
+  password_hash: a
+
+two:
+  name: John
+  email: John@gmail.com
+  password_hash: a
