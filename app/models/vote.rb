@@ -1,4 +1,4 @@
 class Vote < ActiveRecord::Base
-  has_many :users
-  has_many :votes
+  belongs_to :user
+  belongs_to :link
 end
