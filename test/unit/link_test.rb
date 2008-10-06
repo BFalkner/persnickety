@@ -1,8 +1,6 @@
 require 'test_helper'
 
-class LinkTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
-  end
+class LinkTest < Test::Unit::TestCase
+  should_belong_to :creator
+  should_have_many :users, :through => :votes
 end
