@@ -10,11 +10,12 @@ class LinksController < ApplicationController
   end
 
   def create
-    @link = Link.create params[:link]
-    if @link.new_record?
-      render :action => :new, :status => :bad_request
-    else
+    @link = Link.new params[:link]
+    @link.creator = current_user
+    if @link.save
       render :status => :created
+    else
+      render :action => :new, :status => :bad_request
     end
   end
 

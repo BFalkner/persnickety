@@ -10,4 +10,5 @@ class LinkTest < Test::Unit::TestCase
   should_require_attributes :url
   should_require_unique_attributes :url
   should_require_attributes :creator_id
+  should_protect_attributes :creator_id
 end

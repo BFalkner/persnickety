@@ -7,4 +7,6 @@ class Link < ActiveRecord::Base
   validates_presence_of :url
   validates_uniqueness_of :url
   validates_presence_of :creator_id
+  
+  attr_protected :creator_id
 end
