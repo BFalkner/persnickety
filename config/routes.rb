@@ -49,5 +49,7 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
   
-  map.resources :links
+  map.resources :links do |links|
+    links.resources :votes, :controller => 'links/vote'
+  end
 end
