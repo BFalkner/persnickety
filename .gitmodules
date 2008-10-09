@@ -1,3 +1,6 @@
 [submodule "vendor/plugins/restful_authentication"]
 	path = vendor/plugins/restful_authentication
 	url = git://github.com/technoweenie/restful-authentication.git
+[submodule "vendor/plugins/auto_migrations"]
+	path = vendor/plugins/auto_migrations
+	url = git://github.com/pjhyett/auto_migrations.git
