@@ -1,4 +1,6 @@
 class LinksController < ApplicationController
+  before_filter :login_required, :only => [ :new, :create ], :redirect_to => "login_url"
+
   def index
     @links = Link.find :all
   end
