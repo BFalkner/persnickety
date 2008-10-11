@@ -2,7 +2,7 @@ class LinksController < ApplicationController
   before_filter :login_required, :only => [ :new, :create ], :redirect_to => "login_url"
 
   def index
-    @links = Link.find :all
+    @links = Link.find_by_probability(current_user || User.new).sort_by {|l| -l.probability}
   end
 
   def new
