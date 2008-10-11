@@ -9,6 +9,8 @@ class Link < ActiveRecord::Base
   validates_presence_of :creator_id
 
   attr_protected :creator_id
+  
+  attr_accessor :probability
 
   def self.find_by_probability(user)
     links = Link.find :all, :include => :votes
@@ -32,9 +34,12 @@ class Link < ActiveRecord::Base
   end
 
   def self.common_links(lhs, rhs, link)
-    ((lhs.votes.map(&:link_id) | [link.id]) & rhs.votes.map(&:link_id)).size.to_f
+    (lhs.votes.map(&:link_id) & (rhs.votes.map(&:link_id) | [link.id])).size.to_f
   end
 
+  # Avoids an N+1 situation.
+  # This is equivalent to link.users, except it uses a pre-existing list so their
+  # associations can be eager-loaded.
   def self.users_with_link(link, users)
     user_ids = link.votes.map(&:user_id)
     users.select{|u| user_ids.include? u.id }
