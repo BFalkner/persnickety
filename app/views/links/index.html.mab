@@ -1,0 +1,9 @@
+ol do
+  @links.each do |link|
+    li do
+      div(:class => "link") { a link.title, :href => link.url }
+      span "#{link.votes.size} votes ", :class => "votes"
+      span "Probability: #{link.probability.round(3)*100}%", :class => "probability"
+    end
+  end
+end
