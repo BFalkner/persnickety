@@ -52,4 +52,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :links do |links|
     links.resources :votes, :controller => 'links/vote'
   end
+  
+  map.root :controller => 'links', :action => 'index'
 end
