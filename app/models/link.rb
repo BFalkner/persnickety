@@ -9,40 +9,40 @@ class Link < ActiveRecord::Base
   validates_presence_of :creator_id
 
   attr_protected :creator_id
-  
+
   attr_accessor :probability
 
   def self.find_by_probability(user)
     links = Link.find :all, :include => :votes
-    users = User.select { |u| u.votes.id }.to_a
+    users_size = User.select { |u| u.votes.id }.size
+    user_links = links_from_user(user, links)
 
-    links.map do |link|
+    links.each do |link|
       link.probability = bayes(
         link,
-        users_with_link(link, users),
-        proc{|e, h| common_links(e, user, h) / all_links(e, user, h) },
-        proc{|e| e.votes.size.to_f / links.size },
-        proc{|h| h.votes.size.to_f / users.size })
-      link
+        user_links,
+        proc{|e, h| common_users(e, h, user) / with_user(h, user) },
+        proc{|e| 1 },
+        proc{|h| h.votes.size.to_f / users_size })
     end
   end
 
   private
 
-  def self.all_links(lhs, rhs, link)
-    (lhs.votes.map(&:link_id) | rhs.votes.map(&:link_id) | [link.id]).size
+  def self.common_users(lhs, rhs, user)
+    (lhs.votes.map(&:user_id) & (rhs.votes.map(&:user_id) | [user.id])).size.to_f
   end
-
-  def self.common_links(lhs, rhs, link)
-    (lhs.votes.map(&:link_id) & (rhs.votes.map(&:link_id) | [link.id])).size.to_f
+  
+  def self.with_user(link, user)
+    (link.votes.map(&:user_id) | [user.id]).size
   end
 
   # Avoids an N+1 situation.
-  # This is equivalent to link.users, except it uses a pre-existing list so their
+  # This is equivalent to user.links, except it uses a pre-existing list so their
   # associations can be eager-loaded.
-  def self.users_with_link(link, users)
-    user_ids = link.votes.map(&:user_id)
-    users.select{|u| user_ids.include? u.id }
+  def self.links_from_user(user, links)
+    link_ids = user.votes.map(&:link_id)
+    links.select{|l| link_ids.include? l.id }
   end
 
   def self.bayes(hypothesis, evidence, conditional, marginal, prior)
